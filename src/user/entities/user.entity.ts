@@ -1,6 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert,OneToMany, BeforeUpdate, AfterLoad} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert,OneToMany, BeforeUpdate, AfterLoad, OneToOne, JoinColumn} from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Token_refreshs } from './token_refreshs.entity';
+import { Roles } from './roles.entity';
+import { Profiles } from './profiles.entity';
 
 @Entity()
 export class Users {
@@ -16,6 +18,9 @@ export class Users {
   @Column({ nullable: false})
   address: string;
 
+  @Column({type: 'datetime'})
+  birth_date: Date;
+
   @Column({ nullable: false, length:100  })
   email: string;
 
@@ -29,13 +34,21 @@ export class Users {
   password: string;
 
   @Column({ nullable: false })
-  role_id: number;
+  user_type: number;
 
   @Column({ nullable: false })
   companys_id: string;
 
   @OneToMany(() => Token_refreshs, (Refreshtoken) => Refreshtoken.users)
   refreshtoken: Token_refreshs[];
+
+  @OneToOne(()=>Roles, (roles)=>roles.users)
+  @JoinColumn()
+  roles: Roles
+
+  @OneToOne(()=>Profiles, (profiles)=>profiles.users)
+  @JoinColumn()
+  profiles: Profiles
 
   @BeforeInsert()
   async hashPassword() {

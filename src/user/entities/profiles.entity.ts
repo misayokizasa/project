@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne,JoinColumn} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne,JoinColumn, OneToOne} from 'typeorm';
+import { Users } from './user.entity';
 
 @Entity()
 export class Profiles {
@@ -11,8 +12,11 @@ export class Profiles {
   @Column({ nullable: false})
   address: string;
 
-  @Column({nullable: false})
+  @Column({nullable: false })
   mobile : string;
+
+  @Column({nullable: false })
+  tel : string;
 
   @Column({ nullable: false})
   email: string;
@@ -21,5 +25,8 @@ export class Profiles {
   email_cc : string;
 
   @Column({ nullable: false})
-  user_id: number;
+  line_token: number;
+
+  @OneToOne(()=>Users, (users)=>users.profiles)
+  users: Users
 }
